@@ -1,0 +1,18 @@
+sftp.yaml
+Gemfile.lock
+
+# osx
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+
+# emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+.elc
+auto-save-list
+tramp
+.\#*

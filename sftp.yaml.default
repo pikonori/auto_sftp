@@ -1,0 +1,7 @@
+sample:
+  ip:     localhost
+  port:     22
+  user:     admin
+  password:   password
+  local_path: ~/
+  remote_path: /var/www/html/
