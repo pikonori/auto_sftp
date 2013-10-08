@@ -223,7 +223,7 @@ FSSM.monitor(local_path, '**/*') do
         njc_sftp.create "#{base}/#{file}", "#{remote_path}/#{file}"
         puts "U: #{Time.now} #{remote_path}/#{file}"
       rescue
-        puts "E: #{Time.now} #{remote_path}/#{file}"
+        puts "EU: #{Time.now} #{remote_path}/#{file}"
       end
     end
   end
@@ -234,7 +234,7 @@ FSSM.monitor(local_path, '**/*') do
         njc_sftp.create "#{base}/#{file}", "#{remote_path}/#{file}"
         puts "C: #{Time.now} #{remote_path}/#{file}"
       rescue
-        puts "E: #{Time.now} #{remote_path}/#{file}"
+        puts "EC: #{Time.now} #{remote_path}/#{file}"
       end
     end
   end
@@ -245,7 +245,7 @@ FSSM.monitor(local_path, '**/*') do
         njc_sftp.delete "#{remote_path}/#{file}"
         puts "D: #{Time.now} #{remote_path}/#{file}"
       rescue
-        puts "E: #{Time.now} #{remote_path}/#{file}"
+        puts "ED: #{Time.now} #{remote_path}/#{file}"
       end
     end
   end
