@@ -2,6 +2,7 @@
 *.rbc
 .bundle
 .config
+.autosftp
 .yardoc
 Gemfile.lock
 InstalledFiles
