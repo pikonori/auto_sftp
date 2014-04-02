@@ -32,3 +32,19 @@ yaml形式で.autosftpというファイルが作成されます。
 
     $ autosftp start [remote name]
 
+設定したsftpの情報を確認します。
+
+    $ autosftp list
+
+設定したsftpを削除します。
+
+    $ autosftp delete [remote name]
+
+## これからの予定
+
+- 鍵認証出来るようにする。
+
+## 連絡先
+
+https://twitter.com/pikonori
+
