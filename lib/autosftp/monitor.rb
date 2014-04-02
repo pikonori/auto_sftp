@@ -12,18 +12,31 @@ module Autosftp
         puts "Accepted  #{Time.now}"
         puts ""
 
-        update do|base, file|
-          puts "#{base}/#{file}  #{setting[:remote_path]}/#{file}"
-          Autosftp::Connection.create setting, "#{base}/#{file}", "#{setting[:remote_path]}/#{file}"
+        update do |base, file|
+          begin
+            Autosftp::Connection.create setting, "#{base}/#{file}", "#{setting[:remote_path]}/#{file}"
+            puts "U: #{Time.now} #{setting[:remote_path]}/#{file}"
+          rescue
+            puts "EU: #{Time.now} #{setting[:remote_path]}/#{file}"
+          end
         end
 
-        create do|base, file|
-          puts "#{base}/#{file}  #{setting[:remote_path]}/#{file}"
-          Autosftp::Connection.create setting, "#{base}/#{file}", "#{setting[:remote_path]}/#{file}"
+        create do |base, file|
+          begin
+            Autosftp::Connection.create setting, "#{base}/#{file}", "#{setting[:remote_path]}/#{file}"
+            puts "C: #{Time.now} #{setting[:remote_path]}/#{file}"
+          rescue
+            puts "EC: #{Time.now} #{setting[:remote_path]}/#{file}"
+          end
         end
 
-        delete do|base, file|
-          puts '削除'
+        delete do |base, file|
+          begin
+            Autosftp::Connection.delete setting, "#{setting[:remote_path]}/#{file}"
+            puts "D: #{Time.now} #{setting[:remote_path]}/#{file}"
+          rescue
+            puts "ED: #{Time.now} #{setting[:remote_path]}/#{file}"
+          end
         end
 
       end

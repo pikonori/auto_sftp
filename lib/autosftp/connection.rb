@@ -1,9 +1,11 @@
+# -*- coding: utf-8 -*-
 require 'net/ssh'
 require 'net/sftp'
 
 module Autosftp
   class Connection
 
+    # username@host:port形式かどうかチェックする。
     def self.check? sftp
       if /.*\@.*|.*\@.*\:.*/ =~ sftp
         true
@@ -12,6 +14,7 @@ module Autosftp
       end
     end
 
+    # username@host:port形式を分解する。
     def self.explode sftp
       ssh_hash = {}
       if /.*\@.*/ =~ sftp
@@ -29,14 +32,12 @@ module Autosftp
       ssh_hash
     end
 
-
+    # ファイルの新規作成＋更新
     def self.create ssh_hash, local_file, remote_file
-
       Net::SSH.start(ssh_hash[:host], ssh_hash[:user], {:password => ssh_hash[:password], :port => ssh_hash[:port]}) do |ssh|
         ssh.sftp.connect do |sftp|
-          remote_dir = File.dirname(remote_file)
-          ssh_dir(sftp, remote_dir)
 
+          ssh_dir(sftp, File.dirname(remote_file))
           begin
             if File.exist? local_file
               sftp.upload!(local_file, remote_file)
@@ -53,6 +54,16 @@ module Autosftp
       end
     end
 
+    # ファイルの削除
+    def self.delete ssh_hash, remote_file
+      Net::SSH.start(ssh_hash[:host], ssh_hash[:user], {:password => ssh_hash[:password], :port => ssh_hash[:port]}) do |ssh|
+        ssh.sftp.connect do |sftp|
+          sftp.remove!(remote_file)
+        end
+      end
+    end
+
+    # ディレクトリの作成
     def self.ssh_dir sftp, path
       sftp.stat!(path)
     rescue Net::SFTP::StatusException => e
