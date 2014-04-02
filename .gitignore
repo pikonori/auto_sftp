@@ -1,5 +1,21 @@
-sftp.yaml
+*.gem
+*.rbc
+.bundle
+.config
+.autosftp
+.yardoc
 Gemfile.lock
+InstalledFiles
+_yardoc
+coverage
+doc/
+lib/bundler/man
+pkg
+rdoc
+spec/reports
+test/tmp
+test/version_tmp
+tmp
 
 # osx
 .DS_Store

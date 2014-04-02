@@ -1,0 +1,4 @@
+#!/usr/bin/env ruby
+require 'autosftp'
+
+Autosftp::CLI.start
