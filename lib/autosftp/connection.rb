@@ -23,7 +23,7 @@ module Autosftp
         if /.*\:.*/ =~ user_host_ary[1]
           host_port_ary = user_host_ary[1].split(":")
           ssh_hash[:host] = host_port_ary[0]
-          ssh_hash[:port] = host_port_ary[1]
+          ssh_hash[:port] = host_port_ary[1].to_i
         else
           ssh_hash[:host] = user_host_ary[1]
           ssh_hash[:port] = 22
