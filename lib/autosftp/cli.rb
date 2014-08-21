@@ -8,24 +8,34 @@ module Autosftp
   class CLI < Thor
 
     desc "start [remote name]", "Automatic monitoring start"
-    def start(word)
+    def start(*word)
       if false == Autosftp::FileAccess.exist?
         puts "is not .autosftp \n $ autosftp init"
         exit
       end
 
       conf = Autosftp::FileAccess.read
-      if !conf[word]
+      if !conf[word[0]]
         puts "is not setting \n $ autosftp set [remote name]"
         exit
+      elsif
+        setting = conf[word[0]]
+        word.delete_at(0)
       end
 
-      Autosftp::Monitor.start conf[word]
+      if 0 < word.size
+        dir = word.map {|a| a.to_s + "**/*"}
+      else
+        dir = '**/*'
+      end
+
+      Autosftp::Monitor.start setting, dir
     end
 
     desc "set [remote name]", "add information to the '.autosftp'. Please put the name of any [remote name]"
     def set(word)
       ssh_hash = {}
+
       begin
         puts "[username@host:port]"
         ssh_str = STDIN.gets.chomp
@@ -41,20 +51,6 @@ module Autosftp
 
         puts "remote path:"
         ssh_hash[:remote_path] = STDIN.gets.chomp
-
-        begin
-          Net::SSH.start(ssh_hash[:host], ssh_hash[:user], {:password => ssh_hash[:password], :port => ssh_hash[:port]}) do |ssh|
-            command = 'ls ' + ssh_hash[:remote_path]
-            ssh.exec!(command) do |channel, stream, data|
-              if stream == :stderr
-                raise
-              end
-            end
-          end
-        rescue
-          puts "ssh connection ERROR"
-          exit
-        end
 
         puts "local path: --If you enter a blank, the current directory is set"
         ssh_hash[:local_path] = STDIN.gets.chomp
