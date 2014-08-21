@@ -61,6 +61,7 @@ module Autosftp
           sftp.remove!(remote_file)
         end
       end
+    rescue
     end
 
     # ディレクトリの作成

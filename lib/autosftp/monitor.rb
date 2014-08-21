@@ -4,8 +4,8 @@ require 'autosftp/connection'
 
 module Autosftp
   class Monitor
-    def self.start setting
-      FSSM.monitor(setting[:local_path], '**/*') do
+    def self.start setting, dir
+      FSSM.monitor(setting[:local_path], dir) do
         puts "C: create  U: update  D: delete E: error"
         puts ""
         puts "Host      #{setting[:host]}"
