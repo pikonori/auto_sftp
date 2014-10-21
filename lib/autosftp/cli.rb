@@ -8,6 +8,7 @@ module Autosftp
   class CLI < Thor
 
     desc "start [remote name]", "Automatic monitoring start"
+    option :chmod
     def start(*word)
       if false == Autosftp::FileAccess.exist?
         puts "is not .autosftp \n $ autosftp init"
@@ -29,7 +30,16 @@ module Autosftp
         dir = '**/*'
       end
 
-      Autosftp::Monitor.start setting, dir
+      permission = {}
+      if options[:chmod]
+        permission[:dir]  = options[:chmod]
+        permission[:file] = options[:chmod]
+      else
+        permission[:dir]  = 755
+        permission[:file] = 644
+      end
+
+      Autosftp::Monitor.start setting, dir, permission
     end
 
     desc "set [remote name]", "add information to the '.autosftp'. Please put the name of any [remote name]"

@@ -4,7 +4,7 @@ require 'autosftp/connection'
 
 module Autosftp
   class Monitor
-    def self.start setting, dir
+    def self.start setting, dir, permission
       FSSM.monitor(setting[:local_path], dir) do
         puts "C: create  U: update  D: delete E: error"
         puts ""
@@ -14,7 +14,7 @@ module Autosftp
 
         update do |base, file|
           begin
-            Autosftp::Connection.create setting, "#{base}/#{file}", "#{setting[:remote_path]}/#{file}"
+            Autosftp::Connection.create setting, "#{base}/#{file}", "#{setting[:remote_path]}/#{file}", permission
             puts "U: #{Time.now} #{setting[:remote_path]}/#{file}"
           rescue
             puts "EU: #{Time.now} #{setting[:remote_path]}/#{file}"
@@ -23,7 +23,7 @@ module Autosftp
 
         create do |base, file|
           begin
-            Autosftp::Connection.create setting, "#{base}/#{file}", "#{setting[:remote_path]}/#{file}"
+            Autosftp::Connection.create setting, "#{base}/#{file}", "#{setting[:remote_path]}/#{file}", permission
             puts "C: #{Time.now} #{setting[:remote_path]}/#{file}"
           rescue
             puts "EC: #{Time.now} #{setting[:remote_path]}/#{file}"

@@ -33,23 +33,12 @@ module Autosftp
     end
 
     # ファイルの新規作成＋更新
-    def self.create ssh_hash, local_file, remote_file
+    def self.create ssh_hash, local_file, remote_file, permission
       Net::SSH.start(ssh_hash[:host], ssh_hash[:user], {:password => ssh_hash[:password], :port => ssh_hash[:port]}) do |ssh|
-        ssh.sftp.connect do |sftp|
-
-          ssh_dir(sftp, File.dirname(remote_file))
-          begin
-            if File.exist? local_file
-              sftp.upload!(local_file, remote_file)
-            end
-          rescue Net::SFTP::StatusException => e
-            raise unless e.code == 2
-            if File.exist? local_file
-              sftp.upload!(local_file, remote_file)
-              sftp.setstat(remote_file, :permissions => 0644)
-            end
-          end
-
+        ssh_dir(ssh, File.dirname(remote_file), permission)
+        if File.exist? local_file
+          ssh.sftp.upload!(local_file, remote_file)
+          ssh.exec! "chmod #{permission[:file]} #{remote_file}"
         end
       end
     end
@@ -57,20 +46,17 @@ module Autosftp
     # ファイルの削除
     def self.delete ssh_hash, remote_file
       Net::SSH.start(ssh_hash[:host], ssh_hash[:user], {:password => ssh_hash[:password], :port => ssh_hash[:port]}) do |ssh|
-        ssh.sftp.connect do |sftp|
-          sftp.remove!(remote_file)
-        end
+        ssh.sftp.remove!(remote_file)
       end
-    rescue
     end
 
     # ディレクトリの作成
-    def self.ssh_dir sftp, path
-      sftp.stat!(path)
-    rescue Net::SFTP::StatusException => e
+    def self.ssh_dir ssh, path, permission
+      ssh.sftp.stat!(path)
+    rescue
       parent = File::dirname(path);
-      ssh_dir(sftp, parent)
-      sftp.mkdir!(path, :permissions => 0755)
+      ssh_dir(ssh, parent)
+      ssh.sftp.mkdir!(path, :permissions => permission[:dir])
     end
 
   end
