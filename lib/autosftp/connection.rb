@@ -55,7 +55,7 @@ module Autosftp
       ssh.sftp.stat!(path)
     rescue
       parent = File::dirname(path);
-      ssh_dir(ssh, parent)
+      ssh_dir(ssh, parent, permission)
       ssh.sftp.mkdir!(path, :permissions => permission[:dir])
     end
 
