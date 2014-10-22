@@ -56,7 +56,8 @@ module Autosftp
     rescue
       parent = File::dirname(path);
       ssh_dir(ssh, parent, permission)
-      ssh.sftp.mkdir!(path, :permissions => permission[:dir])
+      ssh.sftp.mkdir!(path)
+      ssh.exec! "chmod #{permission[:dir]} #{path}"
     end
 
   end
